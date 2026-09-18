@@ -1,0 +1,6 @@
+{
+  "version": "1.0.0",
+  "package": "versions/1.0.0.json",
+  "sha256": "3edabd23097ae68762e294ce03751a064bb727e8797f513b523ce40a3b9b65d1",
+  "notes": "프로그램 내 업데이트 확인·다운로드·백업·재실행 기능을 추가했습니다. run.bat 실행 버전용입니다."
+}
