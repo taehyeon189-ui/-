@@ -1,6 +1,6 @@
 {
-  "version": "1.0.4",
-  "package": "versions/1.0.4.json",
-  "sha256": "21df8e936e41184a0f4d54c787619bf5bae20c1eb47d35a4ac58eb445e904f21",
-  "notes": "가독성 개선: 큰 목록 글꼴, 숫자 우측 정렬, 높은 대비, 목록 크게 보기. 계산식·기록 유지."
+  "version": "1.0.5",
+  "package": "versions/1.0.5.json",
+  "sha256": "9cb285d63935ec2f7c83d6e86e2ef53d05a3d78cec5719edb673dfd2901bd991",
+  "notes": "아이템별 실제 아이콘 추가. 자주 쓰는 아이콘 포함, 나머지 비동기 다운로드·캐시, 미지원 항목 기본 아이콘 표시."
 }
