@@ -1,6 +1,6 @@
 {
-  "version": "1.0.2",
-  "package": "versions/1.0.2.json",
-  "sha256": "8dc9b972f7644df65c7007460370d64d46a7ed0a52552ce99140d06a6af9baa8",
-  "notes": "공식 API 일퀘·주간 콘텐츠·보스 완료 여부 조회 추가. 키 발급 계정 캐릭터 전용. 5분 자동 갱신."
+  "version": "1.0.3",
+  "package": "versions/1.0.3.json",
+  "sha256": "234cc63623dcb5fdaa084c6d3305da40706f55d81891530573e6ef005aa15295",
+  "notes": "UI 개편: 흰색 카드 대시보드, 청록 포인트, 둥근 버튼, 일퀘·보스 요약 카드. 기존 설정·기록 유지."
 }
