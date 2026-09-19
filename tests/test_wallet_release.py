@@ -36,7 +36,7 @@ else:
 sys.path.insert(0, str(SOURCE))
 import wallet_auto as wa
 import wallet_state as ws
-from wallet_tracker import Wallet
+from wallet_tracker import Wallet, confirmed_wallet_net
 import chat_windows as cw
 import numpy as np
 import cv2
@@ -114,6 +114,27 @@ class StableTests(unittest.TestCase):
                                     (1100, 4, 'a'), (1100, 5, 'b')]:
             self.assertIsNone(stable.feed(value, at, identity))
         self.assertEqual(stable.feed(1100, 6, 'b'), 1100)
+
+
+class IncomeTests(unittest.TestCase):
+    def test_goal_uses_completed_cash_net_without_item_double_count(self):
+        config={};wallet=Wallet(config)
+        wallet.start('1000',100)
+        wallet.transaction('30','potion','출금',True)
+        wallet.finish('1170',300)
+        self.assertEqual(confirmed_wallet_net(config),170)
+
+    def test_open_session_and_old_estimates_do_not_enter_goal(self):
+        config={'hunting_meso_v1':{'enabled':True,'days':{'x':{'estimated':'999999'}}}}
+        wallet=Wallet(config);wallet.start('1000',0)
+        self.assertEqual(confirmed_wallet_net(config),0)
+
+    def test_cash_deposit_and_prepaid_cost_not_counted_as_hunting(self):
+        config={};wallet=Wallet(config);wallet.start('1000',0)
+        wallet.transaction('500','storage','입금',False)
+        wallet.transaction('20','prepaid potion','잔액 변동 없음',True)
+        wallet.finish('1600',0)
+        self.assertEqual(confirmed_wallet_net(config),80)
 
 
 def scene(scale=1, x=100, y=100, busy=False):
@@ -208,6 +229,7 @@ class IntegrationTests(unittest.TestCase):
             def start(self): self.running = True
             def stop(self): self.running = False
             def save_progress(self): pass
+            def refresh_table(self): pass
             def bind(self, *a, **kw): pass
             def after(self, ms, fn): self.jobs.append(fn)
             def winfo_exists(self): return True
