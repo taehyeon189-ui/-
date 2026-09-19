@@ -1,6 +1,6 @@
 {
-  "version": "1.0.9",
-  "package": "versions/1.0.9.json",
-  "sha256": "1c659213236768f63d6c6ce9ae38f15452c1b5fffacf6d50d1d774b138a444ab",
-  "notes": "인벤토리 메소 자동 탐색·측정 연동, 연속 OCR 검증과 가려짐 검사."
+  "version": "1.0.10",
+  "package": "versions/1.0.10.json",
+  "sha256": "d936c40a3c3739bb394439b528c4ea6a877ed74524c5012fbbe3a9489a160007",
+  "notes": "잔액 요청·기록 연결 및 재실행 복구 수정. 오래된 OCR 결과 차단, 45초 대기 제한, 탐색·가려짐 검사 강화, 캡처 확인 복구."
 }
