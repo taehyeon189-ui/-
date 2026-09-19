@@ -3,7 +3,7 @@ import base64, io, unittest
 from types import SimpleNamespace
 from unittest.mock import Mock
 from PIL import Image
-from scheduler_images import image_key, visible_rows
+from scheduler_images import image_key, visible_rows, grouped_contents
 from scheduler_image_data import IMAGES
 from scheduler_ui import Panel
 
@@ -16,7 +16,7 @@ class SchedulerImageTests(unittest.TestCase):
         self.assertIsNone(image_key('bosses','미등록 보스'))
         self.assertIsNone(image_key('daily','루시드'))
     def test_images_are_bundled_valid_and_uniform(self):
-        self.assertEqual(len(IMAGES),34)
+        self.assertEqual(len(IMAGES),40)
         for value in IMAGES.values():
             image=Image.open(io.BytesIO(base64.b64decode(value,validate=True)))
             self.assertEqual(image.size,(44,44));image.verify()
@@ -36,3 +36,23 @@ class SchedulerImageTests(unittest.TestCase):
         self.assertEqual(tree.insert.call_args_list[0].kwargs['tags'],('pending',))
         self.assertEqual(tree.insert.call_args_list[1].kwargs['tags'],('done',))
         self.assertEqual(owner.scheduler_images.get.call_count,2)
+
+    def test_requested_groups_only_without_losing_raw_data(self):
+        data={'daily':[{'name':'몬스터파크','type':'contents','done':False},
+                       {'name':'몬스터파크 익스트림','type':'contents','done':None},
+                       {'name':'길드 출석','type':'contents','done':True},
+                       {'name':'소멸의 여로','type':'quest','done':False}],
+              'weekly':[{'name':'헤이븐 주간 퀘스트','type':'quest','done':False},
+                        {'name':'길드 주간 명성치','type':'contents','done':False}],
+              'bosses':[{'name':'검은 마법사','done':None}]}
+        grouped=grouped_contents(data)
+        self.assertEqual(len(grouped['monster_park']),2)
+        self.assertEqual([r['name'] for r in grouped['daily']],['소멸의 여로'])
+        self.assertEqual([r['name'] for r in grouped['weekly']],['헤이븐 주간 퀘스트'])
+        self.assertEqual(len(data['daily']),4)
+        self.assertIsNone(grouped['bosses'][0]['done'])
+
+    def test_added_images(self):
+        for name in ['검은 마법사','아카이럼','반 레온','혼테일','카웅']:
+            self.assertIn(image_key('bosses',name),IMAGES)
+        self.assertIn(image_key('monster_park','몬스터파크 익스트림'),IMAGES)
