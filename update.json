@@ -1,6 +1,6 @@
 {
-  "version": "1.0.7",
-  "package": "versions/1.0.7.json",
-  "sha256": "26eb1aab7a9997c90696f2e6ec7818810a50521d9e2e4620df52536408a8c21e",
-  "notes": "오늘 목록 비우기·누적 기록 보존, 자정 오늘 보기 전환, 날짜별 기록 및 설정 버튼 잘림 복구."
+  "version": "1.0.8",
+  "package": "versions/1.0.8.json",
+  "sha256": "4c15e1a90a6077f6d1c2b73c6c86bee92ba4c6591156ba668e70a5e08fd58836",
+  "notes": "인벤토리 시작·종료 잔액 OCR 확인, 지출·입출금과 재획비 비용 기록 추가."
 }
