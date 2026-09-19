@@ -181,13 +181,13 @@ class ImageTests(unittest.TestCase):
     def test_empty_scene(self):
         self.assertIsNone(wa.locate(np.zeros((400, 600, 3), np.uint8)))
 
-    def test_ocr_disagreement_low_confidence_and_manual_units_rejected(self):
+    def test_ocr_disagreement_low_confidence_rejected_units_supported(self):
         rgb = np.full((24, 245, 3), 255, np.uint8)
         cv2.putText(rgb, '1,234', (100, 17), cv2.FONT_HERSHEY_SIMPLEX, .45, (30, 30, 30), 1)
         for answers, expected in [([('1,234', .99), ('1,234', .99)], 1234),
                                   ([('1,234', .99), ('123', .99)], None),
                                   ([('1,234', .7), ('1,234', .99)], None),
-                                  ([('12만', .99), ('12만', .99)], None)]:
+                                  ([('12만', .99), ('12만', .99)], 120000)]:
             rows = iter(answers)
             reader = types.SimpleNamespace(recognize=lambda _: [(None, *next(rows))])
             self.assertEqual(wa.recognize(reader, rgb)[0], expected)

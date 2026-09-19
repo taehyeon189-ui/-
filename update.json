@@ -1,6 +1,6 @@
 {
-  "version": "1.0.15",
-  "package": "versions/1.0.15.json",
-  "sha256": "24e31ade4a74a27a2f92035362d9b666d4601e2c784d530d3587ccfd08ee20a2",
-  "notes": "업데이트 및 일반 종료 시 can't delete Tcl command 오류 수정. 하위 창 예약 작업의 중복 삭제 방지. 기존 기록과 설정 보존. 기존 버전의 종료 오류로 자동 적용이 막히면 복구 실행 필요."
+  "version": "1.0.16",
+  "package": "versions/1.0.16.json",
+  "sha256": "4b7ef5f3e6d8ee5cbac7f75fd316a9d1a5e52a33e92b7874c9ed9fdb923ed9d6",
+  "notes": "가로 확장 인벤토리 메소 위치 탐색 추가. 억·만 단위 자동 인식 지원. 제공된 게임 캡처에서 33억 2164만 1033을 3,321,641,033으로 인식 검증. 종료 오류 수정 포함. 실시간 Windows 게임 검증은 별도 필요."
 }
