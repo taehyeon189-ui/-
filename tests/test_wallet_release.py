@@ -295,6 +295,21 @@ class IntegrationTests(unittest.TestCase):
         app.request_wallet_end()
         self.assertEqual(app._wallet_requests.pending['kind'], 'end')
 
+    def test_new_start_retry_preserves_unfinished_record(self):
+        import settings_store
+        app=self.app();old=app._wallet.start('1000',0)
+        with patch.object(settings_store,'last_error',''),patch('tkinter.messagebox.askyesno',return_value=True):
+            app.request_wallet_start()
+        self.assertIsNone(app._wallet.data['active'])
+        self.assertIs(app._wallet.data['unfinished'][0],old)
+        self.assertEqual(app._wallet_requests.pending['kind'],'start')
+
+    def test_cancel_retry_leaves_record_and_request_unchanged(self):
+        app=self.app();old=app._wallet.start('1000',0)
+        with patch('tkinter.messagebox.askyesno',return_value=False):app.request_wallet_start()
+        self.assertIs(app._wallet.data['active'],old)
+        self.assertNotIn('unfinished',app._wallet.data)
+
     def test_pending_end_does_not_block_timer_or_consume_stale_result(self):
         app=self.app();app._wallet.start('1000',0);app.running=True;app.stop()
         req=dict(app._wallet_requests.pending);active=app._wallet.data['active']
@@ -420,4 +435,3 @@ class ScannerTests(unittest.TestCase):
 
 
 if __name__ == '__main__': unittest.main()
-

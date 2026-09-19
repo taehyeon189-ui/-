@@ -1,4 +1,4 @@
-from test_wallet_release import SOURCE  # validate actual published payload
+from test_wallet_release import SOURCE
 """Exercise real callback bodies without requiring a Windows desktop."""
 import ast
 from collections import Counter
@@ -168,6 +168,41 @@ class LedgerUITests(unittest.TestCase):
         o.projection_values[0].configure.assert_called_once_with(text='95 메소')
 
 
+class WalletRetryTests(unittest.TestCase):
+    def test_start_only_record_is_visible_in_history(self):
+        from wallet_tracker import Wallet
+        wallet=Wallet({});row=wallet.start('1000',0)
+        o=SimpleNamespace(_wallet=wallet)
+        table=Mock();table.get_children.return_value=[]
+        tx=Mock();tx.get_children.return_value=[]
+        refresh=body('wallet_tracker','refresh')
+        refresh.__globals__.update(self=o,status=Mock(),summary=Mock(),hist=table,tx=tx,describe=lambda row:'pending')
+        refresh()
+        self.assertEqual(table.insert.call_args.kwargs['iid'],row['id'])
+        self.assertIn('종료 잔액 미확인',table.insert.call_args.kwargs['values'])
+
+    def test_unfinished_record_is_preserved_without_inventing_profit(self):
+        from wallet_tracker import Wallet,confirmed_wallet_net
+        config={};wallet=Wallet(config);original=wallet.start('1000',25)
+        wallet.transaction('50','비용','출금',True)
+        self.assertIs(wallet.keep_unfinished(),original)
+        self.assertIsNone(wallet.data['active'])
+        wallet.start('1200',30)
+        self.assertEqual(wallet.data['unfinished'][0]['transactions'][0]['amount'],50)
+        self.assertIsNone(original['end'])
+        self.assertEqual(confirmed_wallet_net(config),0)
+
+    def test_state_update_cannot_overwrite_confirmed_value(self):
+        from wallet_auto import Scanner
+        scanner=Scanner.__new__(Scanner);scanner.lock=threading.Lock()
+        scanner.events=queue.Queue(maxsize=1);scanner.request={'id':'new'}
+        scanner.put(scanner.request,kind='value',value=1000)
+        scanner.put(scanner.request,kind='state',text='searching')
+        self.assertEqual(scanner.events.get_nowait()['value'],1000)
+        scanner.put({'id':'old'},kind='value',value=2000)
+        self.assertTrue(scanner.events.empty())
+
+
 class SkillValidationTests(unittest.TestCase):
     def test_reject_nonfinite_and_invalid_times(self):
         from skill_timers import valid_timer_values
@@ -177,4 +212,3 @@ class SkillValidationTests(unittest.TestCase):
 
 
 if __name__=='__main__':unittest.main()
-
