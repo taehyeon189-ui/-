@@ -1,6 +1,6 @@
 {
-  "version": "1.0.8",
-  "package": "versions/1.0.8.json",
-  "sha256": "4c15e1a90a6077f6d1c2b73c6c86bee92ba4c6591156ba668e70a5e08fd58836",
-  "notes": "인벤토리 시작·종료 잔액 OCR 확인, 지출·입출금과 재획비 비용 기록 추가."
+  "version": "1.0.9",
+  "package": "versions/1.0.9.json",
+  "sha256": "1c659213236768f63d6c6ce9ae38f15452c1b5fffacf6d50d1d774b138a444ab",
+  "notes": "인벤토리 메소 자동 탐색·측정 연동, 연속 OCR 검증과 가려짐 검사."
 }
