@@ -273,10 +273,14 @@ class IntegrationTests(unittest.TestCase):
         self.assertEqual(app._wallet.data['active']['start'], 2000)
         self.assertEqual(len(app._wallet.data['history']), 1)
 
-    def test_reload_blocks_then_explicit_resume(self):
+    def test_reload_allows_timer_but_wallet_requires_explicit_resume(self):
         first = self.app(); first._wallet.start('1000', 0); first.running = True; first.stop()
         second = self.app(json.loads(json.dumps(first.config_data)))
-        second.start(); self.assertFalse(second.running)
+        second.start(); self.assertTrue(second.running)
+        self.assertTrue(second._wallet_requests.needs_recovery)
+        self.assertIsNone(second._wallet_requests.pending)
+        second.stop()
+        self.assertIsNone(second._wallet_requests.pending)
         with patch('tkinter.messagebox.askyesno', return_value=True): second.resume_wallet()
         self.assertTrue(second.running)
         self.assertEqual(second._wallet.data['active']['start'], 1000)
@@ -286,9 +290,20 @@ class IntegrationTests(unittest.TestCase):
         self.clock = 55; app.tick()
         self.assertIsNone(app._wallet_requests.pending)
         self.assertIn('시간 초과', app._wallet_auto_status.get())
-        app.start(); self.assertFalse(app.running)
+        app.start(); self.assertTrue(app.running)
+        self.assertTrue(app._wallet_requests.needs_recovery)
         app.request_wallet_end()
         self.assertEqual(app._wallet_requests.pending['kind'], 'end')
+
+    def test_pending_end_does_not_block_timer_or_consume_stale_result(self):
+        app=self.app();app._wallet.start('1000',0);app.running=True;app.stop()
+        req=dict(app._wallet_requests.pending);active=app._wallet.data['active']
+        app.start()
+        self.assertTrue(app.running);self.assertIs(app._wallet.data['active'],active)
+        self.assertIsNone(app._wallet_requests.pending)
+        app._wallet_scanner.events.put(event(req));self.clock=13;app.tick()
+        self.assertIs(app._wallet.data['active'],active)
+        app.stop();self.assertIsNone(app._wallet_requests.pending)
 
     def test_disable_enable_invalidates_old_result(self):
         app = self.app(); app.start(); req = dict(app._wallet_requests.pending)
@@ -405,3 +420,4 @@ class ScannerTests(unittest.TestCase):
 
 
 if __name__ == '__main__': unittest.main()
+

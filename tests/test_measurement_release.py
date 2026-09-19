@@ -1,4 +1,4 @@
-from test_wallet_release import SOURCE  # unpack the exact update manifest payload
+from test_wallet_release import SOURCE  # validate actual published payload
 """Regression checks for start/resume, pixel coordinates and actual worker flow."""
 from contextlib import ExitStack
 from pathlib import Path
@@ -62,7 +62,7 @@ class CacheTests(unittest.TestCase):
 class LocatorTests(unittest.TestCase):
     def test_slow_search_does_not_expire_its_own_cache(self):
         from chat_tracker import ChatTracker
-        tracker=ChatTracker(Path(__file__).parent/'assets')
+        tracker=ChatTracker(Path(app.__file__).parent/'assets')
         image=np.random.default_rng(17).integers(0,255,(300,600,3),np.uint8)
         region=dict(left=10,top=50,width=400,height=100)
         with patch.object(tracker,'locate_embedded',return_value=region) as locate,patch('chat_tracker.time.monotonic',side_effect=[10,13,13.2]):
