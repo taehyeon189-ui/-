@@ -186,7 +186,7 @@ class ImageTests(unittest.TestCase):
         cv2.putText(rgb, '1,234', (100, 17), cv2.FONT_HERSHEY_SIMPLEX, .45, (30, 30, 30), 1)
         for answers, expected in [([('1,234', .99), ('1,234', .99)], 1234),
                                   ([('1,234', .99), ('123', .99)], None),
-                                  ([('1,234', .7), ('1,234', .99)], None),
+                                  ([('1,234', .7), ('1,234', .99), ('1,234', .7)], None),
                                   ([('12만', .99), ('12만', .99)], 120000)]:
             rows = iter(answers)
             reader = types.SimpleNamespace(recognize=lambda _: [(None, *next(rows))])
