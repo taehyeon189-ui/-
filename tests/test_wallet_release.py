@@ -396,22 +396,22 @@ class ScannerTests(unittest.TestCase):
         rgb, box = scene()
         l, t, r, b = box
         cv2.putText(rgb, '1,000', (200, 117), cv2.FONT_HERSHEY_SIMPLEX, .45, (30, 30, 30), 1)
-        class Grabber:
-            def __enter__(self): return self
-            def __exit__(self, *args): pass
-            def grab(self, bounds):
-                image = rgb.copy() if bounds['width'] == 1280 else rgb[t:b, l:r].copy()
-                if changed and bounds['width'] != 1280: image[10, 100] = [200, 200, 200]
-                return types.SimpleNamespace(size=(image.shape[1], image.shape[0]), rgb=image.tobytes())
+        capture_calls=[0]
+        def capture(window):
+            capture_calls[0]+=1
+            image=rgb.copy()
+            if changed and capture_calls[0]%2==0:image[t+10,l+100]=[200,200,200]
+            return types.SimpleNamespace(bgr=image[:,:,::-1],bounds=game['client'],at=clock[0],hwnd=window['hwnd'])
         def recognize(*args):
             clock[0] += delay
             return 1000, ['1,000', '1,000']
         game = dict(hwnd=1, pid=1, client=dict(left=0, top=0, width=1280, height=720))
         with patch.dict(sys.modules, {'os': types.SimpleNamespace(name='nt'),
-                        'mss': types.SimpleNamespace(mss=Grabber),
+                        'mss': types.SimpleNamespace(mss=lambda: (_ for _ in ()).throw(AssertionError('desktop capture forbidden'))),
                         'paddle_backend': types.SimpleNamespace(KoreanRecognizer=lambda _: None)}), \
              patch.object(cw, 'maple_windows', return_value=[game]), \
-             patch.object(cw, 'region_visible', return_value=True), \
+             patch.object(cw, 'region_visible', side_effect=AssertionError('desktop visibility must not gate WGC')), \
+             patch('window_capture.capture_client',side_effect=capture), \
              patch.object(wa, 'locate', return_value=box), \
              patch.object(wa, 'recognize', side_effect=recognize), \
              patch.object(wa.time, 'monotonic', side_effect=lambda: clock[0]):

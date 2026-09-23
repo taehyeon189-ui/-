@@ -143,6 +143,7 @@ class WorkerGapTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder,ExitStack() as stack:
             stack.enter_context(patch.dict(sys.modules,{'mss':SimpleNamespace(mss=Grabber)}))
             for target,value in [('paddle_backend.KoreanRecognizer',Mock()),
+                                 ('window_capture.capture_client',lambda win:SimpleNamespace(bgr=np.zeros((300,900,3),np.uint8),bounds={k:win[k] for k in ('left','top','width','height')},at=0,hwnd=win['hwnd'])),
                                  ('chat_tracker.ChatTracker',Mock(return_value=tracker)),
                                  ('chat_windows.maple_windows',Mock(return_value=windows)),
                                  ('chat_windows.region_visible',Mock(return_value=True)),
