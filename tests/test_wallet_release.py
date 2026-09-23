@@ -228,6 +228,7 @@ class IntegrationTests(unittest.TestCase):
                 self._daily = types.SimpleNamespace(combined=lambda: {'net': 0})
             def start(self): self.running = True
             def stop(self): self.running = False
+            def on_close(self): self.closed = True
             def save_progress(self): pass
             def refresh_table(self): pass
             def bind(self, *a, **kw): pass
