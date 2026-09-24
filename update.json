@@ -1,6 +1,6 @@
 {
-  "version": "1.0.26",
-  "package": "versions/1.0.26.json",
-  "sha256": "1fef5743d94c296d209c7800477ad0b82c8d70be133ec7fea269cc1632c2889b",
-  "notes": "자동으로 확인한 시작·종료 메소를 메소 기록 표에도 표시. 측정 종료 및 재실행 후 마지막 측정 표시 유지. 잔액 행은 지출·입출금 합산에서 제외. 실제 게임 OCR 성공 여부는 별도 확인 필요."
+  "version": "1.0.27",
+  "package": "versions/1.0.27.json",
+  "sha256": "7dad4cd6ccbf05970d4a8f5b64b50a1c552fc33b4e765bf098bf88a85bb3bcb3",
+  "notes": "타이머 전용 버전. 경과 시간과 수동 스킬·알림 타이머만 실행. 캡처·OCR·아이템·메소·API·자동 감지 실행 제거. 기존 settings.json은 변경하지 않고 타이머 설정만 별도 저장. 타이머 로직 검사 5개 통과. 실제 Windows UI 및 메모리 사용량은 미검증."
 }
